@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SeneMarket Pro — Marchés Publics Digitaux</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── RESET & TOKENS ────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --vert:#00853F;--vert-d:#005C2B;--vert-l:#E6F5ED;--vert-m:#00A64E;
+  --or:#D4A017;--or-l:#FDF3D8;--or-d:#9A7300;
+  --rouge:#C0001A;--rouge-l:#FCE8EB;
+  --sable:#F8F2E6;--terre:#7C4F2A;
+  --nuit:#0A1628;--encre:#12243A;--ardoise:#1E3A52;
+  --gris:#637082;--gris-l:#F2F4F7;--gris-m:#E2E6EC;
+  --blanc:#FFFFFF;--texte:#1A2B3C;
+  --font-display:'DM Serif Display',serif;
+  --font-body:'Plus Jakarta Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --r:14px;--r-lg:20px;--r-xl:28px;
+  --sh:0 4px 24px rgba(0,0,0,.08);
+  --sh-lg:0 12px 48px rgba(0,0,0,.14);
+  --sh-xl:0 24px 80px rgba(0,0,0,.2);
+}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-body);color:var(--texte);background:var(--blanc);overflow-x:hidden}
+button,input,select,textarea{font-family:var(--font-body)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--gris-l)}
+::-webkit-scrollbar-thumb{background:var(--gris-m);border-radius:3px}
+
+/* ── CURSOR ─────────────────────────────────────────────────────────────── */
+.cursor{width:12px;height:12px;border-radius:50%;background:var(--vert);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,background .2s,width .2s,height .2s;mix-blend-mode:multiply}
+.cursor-ring{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--vert);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .25s cubic-bezier(.16,1,.3,1);opacity:.6}
+body:hover .cursor{opacity:1}
+
+/* ── NAVBAR ─────────────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(0,0,0,.06);transition:box-shadow .3s}
+nav.scrolled{box-shadow:0 2px 32px rgba(0,0,0,.1)}
+.triband{height:3px;display:flex}
+.triband div{flex:1}
+.t1{background:var(--vert)}.t2{background:var(--or)}.t3{background:var(--rouge)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none;flex-shrink:0}
+.logo-icon{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--vert),var(--vert-d));display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;box-shadow:0 4px 12px rgba(0,133,63,.35)}
+.logo-text{line-height:1}
+.logo-text strong{display:block;font-size:17px;font-weight:800;color:var(--encre);letter-spacing:-.5px}
+.logo-text strong span{color:var(--vert)}
+.logo-text small{font-size:10px;color:var(--gris);letter-spacing:.8px;text-transform:uppercase}
+.nav-links{display:flex;gap:4px;align-items:center}
+.nav-link{padding:8px 14px;border-radius:10px;border:none;background:transparent;color:var(--gris);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.nav-link:hover,.nav-link.active{background:var(--vert-l);color:var(--vert)}
+.nav-actions{display:flex;gap:8px;align-items:center;flex-shrink:0}
+.btn-outline{padding:9px 18px;border-radius:10px;border:1.5px solid var(--vert);background:transparent;color:var(--vert);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-outline:hover{background:var(--vert-l)}
+.btn-primary{padding:9px 18px;border-radius:10px;border:none;background:var(--vert);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(0,133,63,.3)}
+.btn-primary:hover{background:var(--vert-m);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,133,63,.4)}
+.notif-btn{width:40px;height:40px;border-radius:10px;border:none;background:var(--gris-l);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--gris);position:relative;transition:all .2s}
+.notif-btn:hover{background:var(--gris-m)}
+.notif-dot{position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:var(--rouge);border:2px solid #fff}
+.user-chip{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:10px;background:var(--gris-l);cursor:default}
+.user-av{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--vert),var(--or));display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800}
+.user-chip span{font-size:13px;font-weight:700}
+.btn-logout{width:36px;height:36px;border-radius:9px;border:none;background:var(--rouge-l);color:var(--rouge);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .2s}
+.btn-logout:hover{background:var(--rouge);color:#fff}
+
+/* ── HAMBURGER ────────────────────────────────────────────────────────────*/
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--texte);border-radius:2px;transition:all .3s}
+.mobile-menu{display:none;position:fixed;top:67px;left:0;right:0;background:#fff;border-bottom:1px solid var(--gris-m);padding:16px 24px;z-index:499;flex-direction:column;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.mobile-menu.open{display:flex}
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+#hero{min-height:100vh;background:linear-gradient(150deg,var(--nuit) 0%,#0D2438 55%,#0A1E10 100%);position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.hero-canvas{position:absolute;inset:0;opacity:.6}
+.hero-img{position:absolute;right:-60px;bottom:0;width:55%;max-width:720px;height:100%;object-fit:cover;opacity:.18;mask-image:linear-gradient(to left,rgba(0,0,0,.9),transparent 60%);-webkit-mask-image:linear-gradient(to left,rgba(0,0,0,.9),transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,133,63,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(0,133,63,.07) 1px,transparent 1px);background-size:60px 60px}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(0,133,63,.15),transparent 70%);top:50%;left:30%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-content{max-width:1280px;margin:0 auto;padding:140px 28px 80px;position:relative;z-index:2}
+.hero-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:30px;background:rgba(0,133,63,.15);border:1px solid rgba(0,133,63,.3);margin-bottom:28px;animation:fadeDown .8s ease both}
+.hero-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--vert);animation:pulse 2s infinite}
+.hero-pill span{font-size:12px;color:var(--vert);font-weight:600;letter-spacing:.5px}
+.hero-h1{font-family:var(--font-display);font-size:clamp(42px,5.5vw,76px);color:#fff;line-height:1.05;margin-bottom:8px;animation:fadeUp .9s .1s ease both}
+.hero-h1 .accent{background:linear-gradient(90deg,var(--vert),var(--or));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(15px,1.6vw,19px);color:rgba(255,255,255,.58);max-width:520px;line-height:1.75;margin:20px 0 40px;animation:fadeUp .9s .2s ease both}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .9s .3s ease both}
+.hero-cta{display:inline-flex;align-items:center;gap:9px;padding:15px 28px;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;border:none}
+.hero-cta.primary{background:var(--vert);color:#fff;box-shadow:0 4px 24px rgba(0,133,63,.45)}
+.hero-cta.primary:hover{background:var(--vert-m);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,133,63,.55)}
+.hero-cta.ghost{background:rgba(255,255,255,.08);color:#fff;border:1.5px solid rgba(255,255,255,.2)}
+.hero-cta.ghost:hover{background:rgba(255,255,255,.14)}
+.hero-cta.gold{background:rgba(212,160,23,.15);color:var(--or);border:1.5px solid rgba(212,160,23,.3)}
+.hero-cta.gold:hover{background:rgba(212,160,23,.25)}
+.hero-stats{display:flex;gap:40px;margin-top:72px;flex-wrap:wrap;animation:fadeUp .9s .45s ease both}
+.stat{cursor:default}
+.stat-n{font-family:var(--font-display);font-size:clamp(28px,3vw,42px);line-height:1;margin-bottom:4px}
+.stat-l{font-size:11px;color:rgba(255,255,255,.45);letter-spacing:.5px;text-transform:uppercase}
+
+/* ── SCROLL INDICATOR ─────────────────────────────────────────────────────*/
+.scroll-ind{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.4;animation:fadeUp .9s .7s ease both}
+.scroll-ind span{font-size:11px;color:#fff;letter-spacing:1px;text-transform:uppercase}
+.scroll-mouse{width:22px;height:32px;border-radius:11px;border:1.5px solid rgba(255,255,255,.4);display:flex;justify-content:center;padding-top:6px}
+.scroll-wheel{width:3px;height:6px;border-radius:2px;background:#fff;animation:scrollWheel 2s infinite}
+
+/* ── SECTION GÉNÉRIQUE ───────────────────────────────────────────────────*/
+section{padding:88px 0}
+.container{max-width:1280px;margin:0 auto;padding:0 28px}
+.section-tag{display:inline-block;padding:4px 14px;border-radius:20px;background:var(--vert-l);color:var(--vert);font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.section-h2{font-family:var(--font-display);font-size:clamp(30px,3.5vw,48px);color:var(--encre);line-height:1.15;margin-bottom:14px}
+.section-sub{font-size:16px;color:var(--gris);line-height:1.7;max-width:520px}
+
+/* ── FEATURES ────────────────────────────────────────────────────────────*/
+#features{background:#fff}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:52px}
+.feat-card{padding:32px;border-radius:var(--r-lg);border:1px solid var(--gris-m);background:#fff;transition:all .3s cubic-bezier(.16,1,.3,1);cursor:default;position:relative;overflow:hidden}
+.feat-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--vert-l),transparent);opacity:0;transition:opacity .3s}
+.feat-card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg);border-color:var(--vert)}
+.feat-card:hover::before{opacity:1}
+.feat-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:20px;position:relative}
+.feat-h3{font-size:17px;font-weight:800;color:var(--encre);margin-bottom:10px;position:relative}
+.feat-p{font-size:14px;color:var(--gris);line-height:1.65;position:relative}
+.feat-num{position:absolute;top:24px;right:24px;font-family:var(--font-mono);font-size:40px;font-weight:600;color:rgba(0,133,63,.06);line-height:1}
+
+/* ── HOW IT WORKS ─────────────────────────────────────────────────────────*/
+#how{background:var(--sable);position:relative;overflow:hidden}
+#how::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(0,133,63,.06) 0%,transparent 50%),radial-gradient(circle at 80% 20%,rgba(212,160,23,.06) 0%,transparent 50%)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;margin-top:52px;position:relative}
+.steps::before{content:'';position:absolute;top:36px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--vert),var(--or),var(--rouge),transparent);opacity:.3}
+.step{text-align:center;position:relative}
+.step-num{width:72px;height:72px;border-radius:50%;background:#fff;border:2px solid var(--gris-m);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-family:var(--font-display);font-size:26px;color:var(--vert);box-shadow:var(--sh);transition:all .3s;position:relative;z-index:1}
+.step:hover .step-num{background:var(--vert);color:#fff;border-color:var(--vert);transform:scale(1.1)}
+.step-icon{font-size:28px;margin-bottom:12px}
+.step-h3{font-size:15px;font-weight:800;color:var(--encre);margin-bottom:8px}
+.step-p{font-size:13px;color:var(--gris);line-height:1.6}
+
+/* ── APPELS D'OFFRES ─────────────────────────────────────────────────────*/
+#tenders{background:#fff;padding-top:100px}
+.search-bar{display:flex;gap:12px;margin:32px 0;flex-wrap:wrap}
+.search-input-wrap{flex:1;min-width:260px;position:relative}
+.search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--gris);font-size:16px;pointer-events:none}
+.search-input{width:100%;padding:13px 16px 13px 46px;border-radius:12px;border:1.5px solid var(--gris-m);font-size:14px;outline:none;transition:border-color .2s;background:#fff;color:var(--texte)}
+.search-input:focus{border-color:var(--vert)}
+.filter-tabs{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-tab{padding:10px 16px;border-radius:10px;border:1.5px solid var(--gris-m);background:#fff;font-size:13px;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s;white-space:nowrap}
+.filter-tab.active,.filter-tab:hover{border-color:var(--vert);background:var(--vert-l);color:var(--vert)}
+.tenders-list{display:flex;flex-direction:column;gap:12px}
+.tender-card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--gris-m);padding:22px 28px;cursor:pointer;transition:all .25s;display:flex;gap:20px;align-items:flex-start}
+.tender-card:hover{border-color:var(--vert);box-shadow:0 4px 24px rgba(0,133,63,.1);transform:translateX(4px)}
+.tender-card-left{flex:1;min-width:0}
+.tender-card-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tag{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700;letter-spacing:.3px}
+.tag-ref{background:var(--gris-l);color:var(--gris)}
+.tag-sector{background:#EFF6FF;color:#1D4ED8}
+.tag-urgent{background:var(--rouge-l);color:var(--rouge)}
+.tender-title{font-size:16px;font-weight:800;color:var(--encre);margin-bottom:6px;line-height:1.35}
+.tender-inst{font-size:13px;color:var(--gris);margin-bottom:14px}
+.tender-meta{display:flex;gap:24px;flex-wrap:wrap}
+.tender-meta-item{display:flex;flex-direction:column;gap:2px}
+.tender-meta-item small{font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.tender-meta-item strong{font-size:14px;font-weight:700;color:var(--texte)}
+.tender-card-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.badge-open{background:var(--vert-l);color:var(--vert-d)}
+.badge-closed{background:var(--gris-l);color:var(--gris)}
+.badge-eval{background:var(--or-l);color:var(--or-d)}
+.badge::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor}
+.btn-sm{padding:8px 16px;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border:none}
+.btn-sm-green{background:var(--vert);color:#fff}
+.btn-sm-green:hover{background:var(--vert-m)}
+
+/* ── DASHBOARD ────────────────────────────────────────────────────────────*/
+#dash{display:none;padding-top:100px;background:var(--gris-l);min-height:100vh}
+.dash-header{background:#fff;border-bottom:1px solid var(--gris-m);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.dash-title{font-size:15px;font-weight:800;color:var(--encre)}
+.dash-sub{font-size:12px;color:var(--gris)}
+.dash-body{max-width:1280px;margin:0 auto;padding:28px 28px 60px}
+.dash-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.kpi{background:#fff;border-radius:var(--r);border:1px solid var(--gris-m);padding:22px 20px;transition:box-shadow .2s}
+.kpi:hover{box-shadow:var(--sh)}
+.kpi-label{font-size:11px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.kpi-val{font-family:var(--font-display);font-size:32px;line-height:1;margin-bottom:4px}
+.kpi-sub{font-size:12px;color:var(--gris)}
+.dash-2col{display:grid;grid-template-columns:1fr 340px;gap:20px}
+.card{background:#fff;border-radius:var(--r-lg);border:1px solid var(--gris-m);overflow:hidden}
+.card-head{padding:18px 22px;border-bottom:1px solid var(--gris-m);display:flex;align-items:center;justify-content:space-between}
+.card-head h3{font-size:15px;font-weight:800;color:var(--encre)}
+.card-head a{font-size:12px;color:var(--vert);font-weight:600;cursor:pointer;text-decoration:none}
+.card-row{padding:14px 22px;border-bottom:1px solid var(--gris-l);cursor:pointer;transition:background .15s;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card-row:last-child{border-bottom:none}
+.card-row:hover{background:var(--gris-l)}
+.card-row-main{flex:1;min-width:0}
+.card-row-title{font-size:13px;font-weight:700;color:var(--texte);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-row-sub{font-size:11px;color:var(--gris)}
+.card-p{padding:18px 22px}
+.activity-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--gris-l)}
+.activity-item:last-child{border-bottom:none}
+.act-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.act-msg{font-size:12px;color:var(--texte);line-height:1.5;margin-bottom:2px}
+.act-time{font-size:11px;color:var(--gris)}
+
+/* ── EVALUATION TABLE ────────────────────────────────────────────────────*/
+.eval-wrap{overflow-x:auto}
+.eval-table{width:100%;border-collapse:collapse;min-width:640px}
+.eval-table th{padding:10px 14px;text-align:left;font-size:10px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;background:var(--gris-l);border-bottom:1px solid var(--gris-m)}
+.eval-table td{padding:12px 14px;border-bottom:1px solid var(--gris-l);vertical-align:middle}
+.eval-table tr:last-child td{border-bottom:none}
+.eval-table tr.winner td{background:#FFFDF0}
+.rank-badge{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+.rank-1{background:var(--or);color:#fff}
+.rank-other{background:var(--gris-l);color:var(--gris)}
+.score-big{font-family:var(--font-display);font-size:22px;line-height:1}
+.bar-wrap{display:flex;align-items:center;gap:8px;min-width:80px}
+.bar{flex:1;height:6px;background:var(--gris-l);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.16,1,.3,1)}
+.bar-val{font-size:11px;font-weight:700;color:var(--texte);width:24px;text-align:right}
+.eval-footer{padding:14px 22px;background:var(--vert-l);display:flex;align-items:center;justify-content:space-between;flex-wrap:gap}
+.eval-rec{font-size:13px;color:var(--vert-d);font-weight:600}
+.btn-validate{padding:10px 22px;border-radius:10px;border:none;background:var(--vert);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-validate:hover{background:var(--vert-m);transform:translateY(-1px)}
+
+/* ── MODAL ───────────────────────────────────────────────────────────────*/
+.overlay{position:fixed;inset:0;background:rgba(10,22,40,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:800;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:var(--r-xl);overflow:hidden;width:100%;max-height:90vh;overflow-y:auto;transform:scale(.96) translateY(12px);transition:transform .35s cubic-bezier(.16,1,.3,1);box-shadow:var(--sh-xl)}
+.overlay.open .modal{transform:scale(1) translateY(0)}
+.modal-sm{max-width:460px}
+.modal-md{max-width:580px}
+.modal-lg{max-width:720px}
+.modal-band{height:4px;display:flex}
+.modal-head{padding:28px 32px 20px;border-bottom:1px solid var(--gris-l)}
+.modal-head h2{font-family:var(--font-display);font-size:22px;color:var(--encre);margin-bottom:4px}
+.modal-head p{font-size:13px;color:var(--gris)}
+.modal-body{padding:24px 32px}
+.modal-foot{padding:20px 32px;border-top:1px solid var(--gris-l);display:flex;gap:10px;justify-content:flex-end}
+.form-group{margin-bottom:18px}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.form-input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--gris-m);font-size:14px;outline:none;transition:border-color .2s;font-family:var(--font-body);color:var(--texte);background:#fff}
+.form-input:focus{border-color:var(--vert)}
+.form-select{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--gris-m);font-size:14px;outline:none;font-family:var(--font-body);background:#fff;color:var(--texte);cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23637082'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:18px}
+.form-textarea{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--gris-m);font-size:14px;outline:none;transition:border-color .2s;font-family:var(--font-body);color:var(--texte);resize:vertical;min-height:90px}
+.form-textarea:focus{border-color:var(--vert)}
+.criteria-box{background:var(--vert-l);border-radius:12px;padding:16px;margin-bottom:18px}
+.criteria-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.criteria-row:last-child{margin-bottom:0}
+.criteria-label{flex:1;font-size:13px;color:var(--texte)}
+.criteria-range{width:100px;accent-color:var(--vert);cursor:pointer}
+.criteria-pct{font-size:13px;font-weight:700;color:var(--vert);width:32px;text-align:right}
+.upload-zone{border:1.5px dashed var(--gris-m);border-radius:11px;padding:14px 18px;margin-bottom:8px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .2s}
+.upload-zone:hover{border-color:var(--vert);background:var(--vert-l)}
+.upload-icon{font-size:20px}
+.upload-text{font-size:13px;color:var(--gris)}
+.upload-text strong{color:var(--texte);font-weight:700}
+.upload-size{margin-left:auto;font-size:11px;color:#9CA3AF}
+.info-box{background:var(--or-l);border-radius:12px;padding:13px 16px;display:flex;gap:10px;margin-bottom:18px}
+.info-box span{font-size:12px;color:#92400E;line-height:1.6}
+.success-screen{text-align:center;padding:20px 0 10px}
+.success-icon{font-size:64px;margin-bottom:16px;animation:bounce .5s ease}
+.success-h{font-family:var(--font-display);font-size:26px;color:var(--vert);margin-bottom:8px}
+.success-p{font-size:14px;color:var(--gris);line-height:1.6;margin-bottom:24px}
+.success-summary{background:var(--vert-l);border-radius:12px;padding:16px;text-align:left;margin-bottom:24px}
+.success-row{display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px}
+.success-row:last-child{margin-bottom:0}
+.success-row span{color:var(--gris)}.success-row strong{color:var(--texte)}
+.btn-modal-cancel{padding:11px 20px;border-radius:11px;border:1.5px solid var(--gris-m);background:#fff;color:var(--gris);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-modal-cancel:hover{border-color:var(--gris);color:var(--texte)}
+.btn-modal-ok{padding:11px 24px;border-radius:11px;border:none;background:linear-gradient(135deg,var(--vert),var(--vert-d));color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(0,133,63,.3)}
+.btn-modal-ok:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,133,63,.4)}
+
+/* ── LOGIN MODAL ─────────────────────────────────────────────────────────*/
+.login-logo{text-align:center;margin-bottom:24px}
+.login-logo-icon{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,var(--vert),var(--vert-d));display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px;box-shadow:0 8px 24px rgba(0,133,63,.35)}
+.tabs{display:flex;background:var(--gris-l);border-radius:12px;padding:4px;gap:4px;margin-bottom:22px}
+.tab{flex:1;padding:9px 0;border-radius:9px;border:none;background:transparent;font-size:13px;font-weight:600;color:var(--gris);cursor:pointer;transition:all .2s}
+.tab.active{background:#fff;color:var(--vert);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.login-input{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--gris-m);font-size:14px;outline:none;transition:border-color .2s;font-family:var(--font-body);color:var(--texte);background:#fff}
+.login-input:focus{border-color:var(--vert)}
+.btn-login{width:100%;padding:13px 0;border-radius:12px;border:none;background:linear-gradient(135deg,var(--vert),var(--vert-d));color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(0,133,63,.35);letter-spacing:.3px}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(0,133,63,.45)}
+.login-demo{text-align:center;font-size:12px;color:var(--gris);margin-top:14px}
+
+/* ── CTA SECTION ─────────────────────────────────────────────────────────*/
+#cta{background:linear-gradient(135deg,var(--vert),var(--vert-d));position:relative;overflow:hidden;padding:80px 0;text-align:center}
+#cta::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.08) 1px,transparent 1px);background-size:30px 30px}
+.cta-h2{font-family:var(--font-display);font-size:clamp(28px,3.5vw,44px);color:#fff;margin-bottom:14px;position:relative}
+.cta-p{font-size:16px;color:rgba(255,255,255,.72);margin-bottom:32px;position:relative}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+.btn-cta-w{padding:13px 28px;border-radius:12px;border:none;background:#fff;color:var(--vert);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-cta-w:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.btn-cta-g{padding:13px 28px;border-radius:12px;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-cta-g:hover{background:rgba(255,255,255,.1)}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────*/
+footer{background:var(--nuit);padding:56px 0 32px;color:rgba(255,255,255,.6)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand{}
+.footer-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.footer-logo-icon{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--vert),var(--vert-d));display:flex;align-items:center;justify-content:center;font-size:18px}
+.footer-logo span{font-size:16px;font-weight:800;color:#fff}
+.footer-logo span em{color:var(--vert);font-style:normal}
+.footer-desc{font-size:13px;line-height:1.7;max-width:260px;margin-bottom:20px}
+.footer-socials{display:flex;gap:8px}
+.footer-social{width:34px;height:34px;border-radius:9px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:background .2s;text-decoration:none;color:inherit}
+.footer-social:hover{background:var(--vert)}
+.footer-col h4{font-size:12px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:8px}
+.footer-col a{font-size:13px;color:rgba(255,255,255,.5);text-decoration:none;cursor:pointer;transition:color .2s}
+.footer-col a:hover{color:var(--vert)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-bottom p{font-size:12px}
+.footer-flag{display:flex;gap:6px;align-items:center}
+.flag-strip{height:14px;border-radius:3px;overflow:hidden;display:flex}
+.flag-strip div{width:12px}
+
+/* ── NOTIF DROPDOWN ──────────────────────────────────────────────────────*/
+.notif-panel{position:absolute;right:0;top:48px;width:300px;background:#fff;border-radius:14px;box-shadow:var(--sh-xl);border:1px solid var(--gris-m);overflow:hidden;z-index:600;opacity:0;pointer-events:none;transform:translateY(-8px) scale(.97);transition:all .25s cubic-bezier(.16,1,.3,1)}
+.notif-panel.open{opacity:1;pointer-events:all;transform:translateY(0) scale(1)}
+.notif-head{padding:12px 16px;border-bottom:1px solid var(--gris-l);font-size:14px;font-weight:800;color:var(--encre)}
+.notif-item{padding:12px 16px;border-bottom:1px solid var(--gris-l);display:flex;gap:10px;align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-dot-c{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.notif-msg{font-size:12px;color:var(--texte);line-height:1.45;margin-bottom:2px}
+.notif-time{font-size:11px;color:var(--gris)}
+
+/* ── PROGRESS / SCORE BARS ───────────────────────────────────────────────*/
+.score-ring{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:0}
+.profile-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--gris-l)}
+.profile-row:last-child{border-bottom:none}
+.cert-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--gris-l)}
+.cert-item:last-child{border-bottom:none}
+.cert-ok{color:var(--vert);font-size:16px}
+.cert-no{color:var(--gris);font-size:16px}
+
+/* ── DETAIL PAGE ─────────────────────────────────────────────────────────*/
+#detail{display:none;padding-top:80px;background:var(--gris-l)}
+.detail-wrap{max-width:1280px;margin:0 auto;padding:28px 28px 60px;display:grid;grid-template-columns:1fr 320px;gap:22px}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--gris);cursor:pointer;margin-bottom:20px;background:none;border:none;font-family:var(--font-body);transition:color .2s;padding:0}
+.back-btn:hover{color:var(--vert)}
+.map-mock{background:linear-gradient(135deg,#D6EAD9,#E8F4EA);border-radius:12px;height:130px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.map-pin{position:absolute;top:40%;left:48%}
+.map-pin-inner{width:16px;height:16px;border-radius:50%;background:var(--rouge);border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.map-pin-wave{position:absolute;width:32px;height:32px;border-radius:50%;background:rgba(192,0,26,.2);top:-8px;left:-8px;animation:wave 2s infinite}
+
+/* ── ANIMATIONS ──────────────────────────────────────────────────────────*/
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes scrollWheel{0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(12px)}}
+@keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+@keyframes wave{from{transform:scale(1);opacity:.6}to{transform:scale(2);opacity:0}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes countUp{from{opacity:0}to{opacity:1}}
+
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+.stagger-1{transition-delay:.1s}
+.stagger-2{transition-delay:.2s}
+.stagger-3{transition-delay:.3s}
+.stagger-4{transition-delay:.4s}
+
+/* ── RESPONSIVE ──────────────────────────────────────────────────────────*/
+@media(max-width:1024px){
+  .dash-grid{grid-template-columns:1fr 1fr}
+  .dash-2col{grid-template-columns:1fr}
+  .detail-wrap{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  .hero-img{display:none}
+  .hero-content{padding:110px 20px 60px}
+  .hero-stats{gap:24px}
+  .dash-grid{grid-template-columns:1fr 1fr}
+  .search-bar{flex-direction:column}
+  .footer-grid{grid-template-columns:1fr}
+  .features-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .steps::before{display:none}
+  section{padding:60px 0}
+  .container{padding:0 20px}
+}
+@media(max-width:480px){
+  .dash-grid{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .hero-ctas{flex-direction:column}
+  .hero-cta{justify-content:center}
+  .user-chip span{display:none}
+  .tender-card{flex-direction:column}
+  .tender-card-right{align-items:flex-start}
+  .modal-body{padding:20px}
+  .modal-foot{padding:16px 20px}
+}
+
+/* Hide/show sections */
+#home-sections{display:block}
+#dash.active{display:block}
+#tenders.active{display:block}
+#detail.active{display:block}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ══ NAVBAR ══════════════════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="triband"><div class="t1"></div><div class="t2"></div><div class="t3"></div></div>
+  <div class="nav-inner">
+    <a class="logo" onclick="goHome()">
+      <div class="logo-icon">🌿</div>
+      <div class="logo-text"><strong>SeneMarket<span>Pro</span></strong><small>Marchés Publics · Sénégal</small></div>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <button class="nav-link" id="nlHome" onclick="goHome()">🏠 Accueil</button>
+      <button class="nav-link" id="nlTenders" onclick="showTenders()">📋 Appels d'Offres</button>
+      <button class="nav-link" id="nlDash" onclick="showDash()" style="display:none">📊 Tableau de Bord</button>
+    </div>
+    <div class="nav-actions" id="navActions">
+      <button class="btn-outline" onclick="openLogin('entreprise')">🏢 Entreprise</button>
+      <button class="btn-primary" onclick="openLogin('institution')">🏛️ Institution</button>
+    </div>
+    <div class="nav-actions" id="navLogged" style="display:none">
+      <div style="position:relative">
+        <button class="notif-btn" onclick="toggleNotif()">🔔<span class="notif-dot"></span></button>
+        <div class="notif-panel" id="notifPanel">
+          <div class="notif-head">Notifications (3)</div>
+          <div class="notif-item"><div class="notif-dot-c" style="background:var(--vert)"></div><div><div class="notif-msg">Nouvelle soumission — DCMP-2025-001</div><div class="notif-time">Il y a 5 min</div></div></div>
+          <div class="notif-item"><div class="notif-dot-c" style="background:var(--or)"></div><div><div class="notif-msg">Appel ONAS-2025-012 clôturé</div><div class="notif-time">Il y a 2h</div></div></div>
+          <div class="notif-item"><div class="notif-dot-c" style="background:var(--rouge)"></div><div><div class="notif-msg">Rappel : MIN-AGRI-033 expire dans 5 jours</div><div class="notif-time">Hier</div></div></div>
+        </div>
+      </div>
+      <div class="user-chip" id="userChip"><div class="user-av" id="userAv">MIN</div><span id="userName">Min. Éducation</span></div>
+      <button class="btn-logout" onclick="logout()" title="Déconnexion">🚪</button>
+    </div>
+    <button class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <button class="nav-link" onclick="goHome();toggleMenu()">🏠 Accueil</button>
+  <button class="nav-link" onclick="showTenders();toggleMenu()">📋 Appels d'Offres</button>
+  <button class="nav-link" id="mNlDash" onclick="showDash();toggleMenu()" style="display:none">📊 Tableau de Bord</button>
+  <button class="btn-primary" style="width:100%;margin-top:8px" onclick="openLogin('institution');toggleMenu()">Se connecter</button>
+</div>
+
+<!-- ══ HOME ════════════════════════════════════════════════════════════════ -->
+<div id="home-sections">
+
+<!-- HERO -->
+<section id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <img class="hero-img" src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&auto=format&fit=crop&q=60" alt="Dakar Sénégal"/>
+  <div class="hero-content">
+    <div class="hero-pill"><span class="dot"></span><span>Vision Sénégal 2050 — Gouvernance Numérique</span></div>
+    <h1 class="hero-h1">La plateforme nationale<br>des <span class="accent">marchés publics</span><br>digitaux</h1>
+    <p class="hero-sub">SeneMarket Pro connecte institutions de l'État et entreprises sénégalaises pour une commande publique transparente, équitable et efficiente.</p>
+    <div class="hero-ctas">
+      <button class="hero-cta primary" onclick="openLogin('institution')">🏛️ Espace Institution</button>
+      <button class="hero-cta ghost" onclick="openLogin('entreprise')">🏢 Espace Entreprise</button>
+      <button class="hero-cta gold" onclick="showTenders()">🔍 Appels d'Offres</button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-n" style="color:var(--vert)" data-target="247">0</div><div class="stat-l">Institutions connectées</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--or)" data-target="1200">0</div><div class="stat-l">Entreprises enregistrées</div></div>
+      <div class="stat"><div class="stat-n" style="color:#60A5FA" data-target="3840">0</div><div class="stat-l">Marchés traités</div></div>
+      <div class="stat"><div class="stat-n" style="color:var(--rouge)" data-target="98">0</div><div class="stat-l">% Transparence</div></div>
+    </div>
+  </div>
+  <div class="scroll-ind"><span>Défiler</span><div class="scroll-mouse"><div class="scroll-wheel"></div></div></div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="fade-in" style="text-align:center;margin-bottom:4px">
+      <div class="section-tag">Fonctionnalités</div>
+      <h2 class="section-h2">Un processus entièrement digitalisé</h2>
+      <p class="section-sub" style="margin:0 auto">De la publication à l'attribution, chaque étape tracée, sécurisée et transparente.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feat-card fade-in stagger-1">
+        <span class="feat-num">01</span>
+        <div class="feat-icon" style="background:var(--vert-l)">📢</div>
+        <h3 class="feat-h3">Publication d'Appels d'Offres</h3>
+        <p class="feat-p">Les institutions publient leurs marchés en quelques minutes avec des formulaires structurés et conformes au code des marchés publics.</p>
+      </div>
+      <div class="feat-card fade-in stagger-2">
+        <span class="feat-num">02</span>
+        <div class="feat-icon" style="background:#EFF6FF">📋</div>
+        <h3 class="feat-h3">Soumission Électronique</h3>
+        <p class="feat-p">Les entreprises déposent leurs offres en ligne avec tous les documents requis, depuis Dakar, Ziguinchor ou Tambacounda.</p>
+      </div>
+      <div class="feat-card fade-in stagger-3">
+        <span class="feat-num">03</span>
+        <div class="feat-icon" style="background:var(--or-l)">🤖</div>
+        <h3 class="feat-h3">Évaluation Multicritère IA</h3>
+        <p class="feat-p">Notre moteur intelligent note chaque offre sur le prix, la qualité technique, les délais et les références. Objectif et traçable.</p>
+      </div>
+      <div class="feat-card fade-in stagger-4">
+        <span class="feat-num">04</span>
+        <div class="feat-icon" style="background:var(--rouge-l)">🏆</div>
+        <h3 class="feat-h3">Attribution Transparente</h3>
+        <p class="feat-p">Les résultats sont publiés automatiquement. Chaque décision est documentée, horodatée et consultable par les parties prenantes.</p>
+      </div>
+    </div>
+
+    <!-- PHOTO BAND -->
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px;margin-top:52px;border-radius:20px;overflow:hidden" class="fade-in">
+      <div style="position:relative;overflow:hidden;border-radius:16px">
+        <img src="https://images.unsplash.com/photo-1589519160732-576f165b9aad?w=800&auto=format&fit=crop&q=70" style="width:100%;height:220px;object-fit:cover;display:block;transition:transform .5s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Dakar"/>
+        <div style="position:absolute;bottom:16px;left:16px;background:rgba(0,0,0,.6);color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;backdrop-filter:blur(4px)">📍 Dakar — Hub National</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="overflow:hidden;border-radius:16px;flex:1">
+          <img src="https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&auto=format&fit=crop&q=70" style="width:100%;height:100%;min-height:100px;object-fit:cover;display:block;transition:transform .5s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="PME"/>
+        </div>
+        <div style="overflow:hidden;border-radius:16px;flex:1">
+          <img src="https://images.unsplash.com/photo-1560472355-536de3962603?w=600&auto=format&fit=crop&q=70" style="width:100%;height:100%;min-height:100px;object-fit:cover;display:block;transition:transform .5s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Tech"/>
+        </div>
+      </div>
+      <div style="overflow:hidden;border-radius:16px">
+        <img src="https://images.unsplash.com/photo-1459257831348-f0cdd359235f?w=600&auto=format&fit=crop&q=70" style="width:100%;height:220px;object-fit:cover;display:block;transition:transform .5s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" alt="Agriculture"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container">
+    <div style="text-align:center" class="fade-in">
+      <div class="section-tag">Comment ça marche</div>
+      <h2 class="section-h2">Simple. Rapide. Transparent.</h2>
+      <p class="section-sub" style="margin:0 auto">Un processus de bout en bout en 5 étapes claires pour institutions et entreprises.</p>
+    </div>
+    <div class="steps">
+      <div class="step fade-in stagger-1">
+        <div class="step-num">1</div>
+        <div class="step-icon">📝</div>
+        <h3 class="step-h3">Inscription & Certification</h3>
+        <p class="step-p">Créez votre compte et vérifiez votre conformité (RCCM, DGID, CNSS) en ligne.</p>
+      </div>
+      <div class="step fade-in stagger-2">
+        <div class="step-num">2</div>
+        <div class="step-icon">📢</div>
+        <h3 class="step-h3">Publication / Consultation</h3>
+        <p class="step-p">Les institutions publient, les entreprises consultent tous les appels d'offres nationaux.</p>
+      </div>
+      <div class="step fade-in stagger-3">
+        <div class="step-num">3</div>
+        <div class="step-icon">📤</div>
+        <h3 class="step-h3">Soumission en Ligne</h3>
+        <p class="step-p">Déposez votre offre complète (technique + financière) de façon sécurisée et chiffrée.</p>
+      </div>
+      <div class="step fade-in stagger-4">
+        <div class="step-num">4</div>
+        <div class="step-icon">⚡</div>
+        <h3 class="step-h3">Évaluation IA</h3>
+        <p class="step-p">Le moteur multicritère note et classe automatiquement les offres selon les critères définis.</p>
+      </div>
+      <div class="step fade-in" style="transition-delay:.5s">
+        <div class="step-num">5</div>
+        <div class="step-icon">🏆</div>
+        <h3 class="step-h3">Attribution & Notification</h3>
+        <p class="step-p">Le résultat est publié. Tous les soumissionnaires sont notifiés automatiquement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <h2 class="cta-h2 fade-in">Prêt à transformer la commande publique sénégalaise ?</h2>
+    <p class="cta-p fade-in stagger-1">Rejoignez les 1 200+ entreprises et 247 institutions déjà connectées sur SeneMarket Pro.</p>
+    <div class="cta-btns fade-in stagger-2">
+      <button class="btn-cta-w" onclick="openLogin('entreprise')">🏢 Créer un compte entreprise</button>
+      <button class="btn-cta-g" onclick="showTenders()">📋 Voir les appels d'offres</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">🌿</div>
+          <span>SeneMarket<em>Pro</em></span>
+        </div>
+        <p class="footer-desc">La plateforme nationale de dématérialisation des marchés publics du Sénégal. Un outil au service de la transparence et du développement.</p>
+        <div class="footer-socials">
+          <a class="footer-social" title="Twitter">𝕏</a>
+          <a class="footer-social" title="LinkedIn">in</a>
+          <a class="footer-social" title="Facebook">f</a>
+          <a class="footer-social" title="YouTube">▶</a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Plateforme</h4><ul>
+        <li><a onclick="showTenders()">Appels d'Offres</a></li>
+        <li><a onclick="openLogin('institution')">Espace Institution</a></li>
+        <li><a onclick="openLogin('entreprise')">Espace Entreprise</a></li>
+        <li><a>Comment ça marche</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Ressources</h4><ul>
+        <li><a>Code des Marchés Publics</a></li>
+        <li><a>ARMP Sénégal</a></li>
+        <li><a>DCMP</a></li>
+        <li><a>Documentation API</a></li>
+      </ul></div>
+      <div class="footer-col"><h4>Contact</h4><ul>
+        <li><a>contact@senemarket.sn</a></li>
+        <li><a>+221 33 XXX XX XX</a></li>
+        <li><a>Dakar, Sénégal</a></li>
+        <li><a>Mentions légales</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 SeneMarket Pro — El Hadji M Fadilou Mbacke Ndour. Tous droits réservés.</p>
+      <div class="footer-flag">
+        <span style="font-size:12px;color:rgba(255,255,255,.4)">Sénégal</span>
+        <div class="flag-strip"><div style="background:var(--vert)"></div><div style="background:var(--or)"></div><div style="background:var(--rouge)"></div></div>
+      </div>
+    </div>
+  </div>
+</footer>
+</div><!-- /#home-sections -->
+
+<!-- ══ TENDERS PAGE ═════════════════════════════════════════════════════════ -->
+<section id="tenders">
+  <div class="container">
+    <button class="back-btn" onclick="goHome()">← Retour à l'accueil</button>
+    <div class="fade-in">
+      <div class="section-tag">Marchés Publics</div>
+      <h2 class="section-h2" style="margin-bottom:6px">Appels d'Offres en Cours</h2>
+      <p style="color:var(--gris);font-size:14px;margin-bottom:0">Tous les marchés publics ouverts aux entreprises sénégalaises</p>
+    </div>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="searchInput" placeholder="Rechercher un appel d'offres, une référence..." oninput="filterTenders()"/>
+      </div>
+      <div class="filter-tabs" id="filterTabs">
+        <button class="filter-tab active" data-filter="Tous" onclick="setFilter(this,'Tous')">Tous</button>
+        <button class="filter-tab" data-filter="Numérique" onclick="setFilter(this,'Numérique')">💻 Numérique</button>
+        <button class="filter-tab" data-filter="BTP" onclick="setFilter(this,'BTP')">🏗️ BTP</button>
+        <button class="filter-tab" data-filter="Services" onclick="setFilter(this,'Services')">🛎️ Services</button>
+        <button class="filter-tab" data-filter="Agriculture" onclick="setFilter(this,'Agriculture')">🌾 Agriculture</button>
+        <button class="filter-tab" data-filter="Santé" onclick="setFilter(this,'Santé')">🏥 Santé</button>
+      </div>
+    </div>
+    <div id="tendersCount" style="font-size:13px;color:var(--gris);margin-bottom:14px"></div>
+    <div class="tenders-list" id="tendersList"></div>
+  </div>
+</section>
+
+<!-- ══ DETAIL PAGE ══════════════════════════════════════════════════════════ -->
+<section id="detail">
+  <div class="container" style="padding-top:0">
+    <button class="back-btn" id="detailBack">← Retour aux appels d'offres</button>
+    <div class="detail-wrap" id="detailWrap" style="padding:0 0 60px"></div>
+  </div>
+</section>
+
+<!-- ══ DASHBOARD ════════════════════════════════════════════════════════════ -->
+<section id="dash">
+  <div class="dash-header container" style="max-width:100%;padding:0 28px">
+    <div><div class="dash-title" id="dashTitle">Tableau de Bord</div><div class="dash-sub" id="dashSub"></div></div>
+    <button id="dashActionBtn" class="btn-primary" style="font-size:13px"></button>
+  </div>
+  <div class="dash-body" id="dashBody"></div>
+</section>
+
+<!-- ══ LOGIN MODAL ══════════════════════════════════════════════════════════ -->
+<div class="overlay" id="loginOverlay" onclick="closeLoginOutside(event)">
+  <div class="modal modal-sm">
+    <div class="modal-band triband"><div class="t1"></div><div class="t2"></div><div class="t3"></div></div>
+    <div class="modal-body" style="padding:28px 32px">
+      <div class="login-logo">
+        <div class="login-logo-icon">🌿</div>
+        <h2 style="font-family:var(--font-display);font-size:22px;color:var(--encre);margin-bottom:3px">SeneMarket Pro</h2>
+        <p style="font-size:13px;color:var(--gris)">Connexion sécurisée à la plateforme</p>
+      </div>
+      <div class="tabs">
+        <button class="tab" id="tabInst" onclick="switchLoginTab('institution')">🏛️ Institution</button>
+        <button class="tab" id="tabEnt" onclick="switchLoginTab('entreprise')">🏢 Entreprise</button>
+      </div>
+      <div class="form-group"><label class="form-label">Identifiant</label><input class="login-input" id="loginEmail" readonly/></div>
+      <div class="form-group" style="margin-bottom:24px"><label class="form-label">Mot de passe</label><input class="login-input" type="password" value="••••••••" readonly/></div>
+      <button class="btn-login" onclick="doLogin()">Se connecter →</button>
+      <p class="login-demo">Mode démo — connexion instantanée</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PUBLISH MODAL ════════════════════════════════════════════════════════ -->
+<div class="overlay" id="publishOverlay" onclick="closePublishOutside(event)">
+  <div class="modal modal-md">
+    <div class="modal-band triband"><div class="t1"></div><div class="t2"></div><div class="t3"></div></div>
+    <div id="publishContent">
+      <div class="modal-head">
+        <h2>Publier un Appel d'Offres</h2>
+        <p>Remplissez le formulaire — visible par toutes les entreprises enregistrées</p>
+      </div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Titre du marché</label><input class="form-input" id="pubTitre" placeholder="Ex: Fourniture de matériel informatique pour les écoles..."/></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="form-group"><label class="form-label">Budget estimé (FCFA)</label><input class="form-input" id="pubBudget" type="number" placeholder="Ex: 150000000"/></div>
+          <div class="form-group"><label class="form-label">Date limite</label><input class="form-input" id="pubDate" type="date"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Secteur</label>
+          <select class="form-select">
+            <option>Numérique / Informatique</option>
+            <option>BTP / Construction</option>
+            <option>Services</option>
+            <option>Agriculture</option>
+            <option>Santé</option>
+            <option>Transport</option>
+          </select>
+        </div>
+        <div class="form-group"><label class="form-label">Description du marché</label><textarea class="form-textarea" placeholder="Décrivez les besoins, spécifications techniques, conditions de livraison..."></textarea></div>
+        <div class="criteria-box">
+          <div style="font-size:11px;font-weight:800;color:var(--vert);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px">⚖️ Pondération des critères d'évaluation</div>
+          <div class="criteria-row"><span class="criteria-label">💰 Prix proposé</span><input class="criteria-range" type="range" min="10" max="50" value="35" oninput="this.nextElementSibling.textContent=this.value+'%'"/><span class="criteria-pct">35%</span></div>
+          <div class="criteria-row"><span class="criteria-label">⭐ Qualité technique</span><input class="criteria-range" type="range" min="10" max="50" value="30" oninput="this.nextElementSibling.textContent=this.value+'%'"/><span class="criteria-pct">30%</span></div>
+          <div class="criteria-row"><span class="criteria-label">⏱️ Délai d'exécution</span><input class="criteria-range" type="range" min="5" max="30" value="20" oninput="this.nextElementSibling.textContent=this.value+'%'"/><span class="criteria-pct">20%</span></div>
+          <div class="criteria-row"><span class="criteria-label">📁 Références</span><input class="criteria-range" type="range" min="5" max="25" value="15" oninput="this.nextElementSibling.textContent=this.value+'%'"/><span class="criteria-pct">15%</span></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-modal-cancel" onclick="closePublish()">Annuler</button>
+        <button class="btn-modal-ok" onclick="doPublish()">📢 Publier l'appel d'offres</button>
+      </div>
+    </div>
+    <div id="publishSuccess" style="display:none">
+      <div class="modal-body">
+        <div class="success-screen">
+          <div class="success-icon">🎉</div>
+          <h2 class="success-h">Appel d'offres publié !</h2>
+          <p class="success-p">Votre appel d'offres est maintenant visible par toutes les entreprises enregistrées sur SeneMarket Pro.</p>
+          <div class="success-summary">
+            <div style="font-size:11px;font-weight:800;color:var(--vert);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Récapitulatif</div>
+            <div class="success-row"><span>Référence</span><strong>DCMP-2025-006</strong></div>
+            <div class="success-row"><span>Statut</span><strong style="color:var(--vert)">✅ Publié & Actif</strong></div>
+            <div class="success-row"><span>Visibilité</span><strong>Nationale — 1 200+ entreprises notifiées</strong></div>
+          </div>
+          <button class="btn-modal-ok" style="width:100%" onclick="closePublish()">Parfait !</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUBMIT MODAL ═════════════════════════════════════════════════════════ -->
+<div class="overlay" id="submitOverlay" onclick="closeSubmitOutside(event)">
+  <div class="modal modal-md">
+    <div class="modal-band triband"><div class="t1"></div><div class="t2"></div><div class="t3"></div></div>
+    <div id="submitContent">
+      <div class="modal-head">
+        <h2>Soumettre une Offre</h2>
+        <p id="submitSubTitle">Remplissez et déposez votre offre de façon sécurisée</p>
+      </div>
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div class="form-group"><label class="form-label">Prix proposé (FCFA)</label><input class="form-input" type="number" placeholder="Ex: 320000000"/></div>
+          <div class="form-group"><label class="form-label">Délai d'exécution (jours)</label><input class="form-input" type="number" placeholder="Ex: 45"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Approche méthodologique</label><textarea class="form-textarea" placeholder="Décrivez votre approche technique et organisationnelle..."></textarea></div>
+        <div class="form-group">
+          <label class="form-label">📎 Dépôt des Documents</label>
+          <div class="upload-zone" onclick="this.style.background='var(--vert-l)';this.style.borderColor='var(--vert)'">
+            <span class="upload-icon">📄</span>
+            <span class="upload-text"><strong>Offre technique</strong> — Déposer ici</span>
+            <span class="upload-size">PDF • max 10MB</span>
+          </div>
+          <div class="upload-zone" onclick="this.style.background='var(--vert-l)';this.style.borderColor='var(--vert)'">
+            <span class="upload-icon">💰</span>
+            <span class="upload-text"><strong>Offre financière (pli fermé)</strong> — Déposer ici</span>
+            <span class="upload-size">PDF • max 5MB</span>
+          </div>
+          <div class="upload-zone" onclick="this.style.background='var(--vert-l)';this.style.borderColor='var(--vert)'">
+            <span class="upload-icon">🗂️</span>
+            <span class="upload-text"><strong>Documents administratifs</strong> (RCCM, DGID, CNSS)</span>
+            <span class="upload-size">PDF • max 15MB</span>
+          </div>
+        </div>
+        <div class="info-box">
+          <span>ℹ️</span>
+          <span>Votre offre sera évaluée par notre moteur IA selon les critères pondérés définis par l'institution. Assurez-vous que tous les documents sont complets et lisibles.</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn-modal-cancel" onclick="closeSubmit()">Annuler</button>
+        <button class="btn-modal-ok" onclick="doSubmit()">✅ Soumettre mon offre</button>
+      </div>
+    </div>
+    <div id="submitSuccess" style="display:none">
+      <div class="modal-body">
+        <div class="success-screen">
+          <div class="success-icon">✅</div>
+          <h2 class="success-h">Offre soumise avec succès !</h2>
+          <p class="success-p">Votre offre a été transmise de façon sécurisée et chiffrée. Vous recevrez une notification dès le début de l'évaluation.</p>
+          <div class="success-summary">
+            <div style="font-size:11px;font-weight:800;color:var(--vert);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Récapitulatif de votre soumission</div>
+            <div class="success-row"><span>Référence marché</span><strong id="successRef">—</strong></div>
+            <div class="success-row"><span>Score pré-estimé</span><strong style="color:var(--vert)">82 / 100</strong></div>
+            <div class="success-row"><span>Rang estimé</span><strong>2ème sur 4 soumissionnaires</strong></div>
+            <div class="success-row"><span>Statut</span><strong style="color:var(--vert)">✅ En évaluation</strong></div>
+          </div>
+          <button class="btn-modal-ok" style="width:100%" onclick="closeSubmit()">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────────────
+const TENDERS=[
+  {id:1,ref:"DCMP-2025-001",titre:"Fourniture d'équipements informatiques pour les écoles publiques",institution:"Ministère de l'Éducation Nationale",budget:"450 000 000",secteur:"Numérique",delai:"15 Mai 2025",statut:"Ouvert",soumissions:7,urgent:true,img:"https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=800&q=60"},
+  {id:2,ref:"MIN-SANTE-045",titre:"Construction d'un centre de santé communautaire à Ziguinchor",institution:"Ministère de la Santé et de l'Action Sociale",budget:"1 200 000 000",secteur:"Santé",delai:"30 Avr. 2025",statut:"Ouvert",soumissions:4,urgent:false,img:"https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=800&q=60"},
+  {id:3,ref:"ONAS-2025-012",titre:"Prestation de nettoyage et entretien des locaux ONAS — région de Dakar",institution:"ONAS — Office National de l'Assainissement",budget:"85 000 000",secteur:"Services",delai:"20 Avr. 2025",statut:"Clôturé",soumissions:12,urgent:false,img:"https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=60"},
+  {id:4,ref:"APIX-TIC-008",titre:"Développement d'un système de gestion documentaire pour l'APIX",institution:"APIX — Agence pour la Promotion des Investissements",budget:"320 000 000",secteur:"Numérique",delai:"10 Juin 2025",statut:"Ouvert",soumissions:3,urgent:false,img:"https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&q=60"},
+  {id:5,ref:"MIN-AGRI-033",titre:"Acquisition de semences améliorées pour la campagne agricole 2025",institution:"Ministère de l'Agriculture et de la Souveraineté Alimentaire",budget:"750 000 000",secteur:"Agriculture",delai:"25 Mai 2025",statut:"Ouvert",soumissions:6,urgent:true,img:"https://images.unsplash.com/photo-1534483509719-3feaee7c30da?w=800&q=60"},
+  {id:6,ref:"DER-2025-007",titre:"Fourniture de mobilier de bureau pour la DER/FJ",institution:"DER/FJ — Délégation Générale à l'Entrepreneuriat Rapide",budget:"45 000 000",secteur:"Services",delai:"05 Mai 2025",statut:"Ouvert",soumissions:9,urgent:false,img:"https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=60"},
+];
+const SUBMISSIONS=[
+  {id:1,ent:"Sénégal IT Solutions",score:87,prix:320000000,qualite:90,delai:85,ref:88,statut:"Finaliste",rang:1},
+  {id:2,ent:"DAKAR TECH SARL",score:79,prix:298000000,qualite:72,delai:88,ref:78,statut:"En évaluation",rang:2},
+  {id:3,ent:"AfriDigital Group",score:74,prix:410000000,qualite:82,delai:68,ref:74,statut:"En évaluation",rang:3},
+  {id:4,ent:"PME InnoSénégal",score:68,prix:285000000,qualite:65,delai:72,ref:66,statut:"En évaluation",rang:4},
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let role=null,currentTender=null,activeFilter="Tous",loginRole="institution";
+
+// ── CURSOR ────────────────────────────────────────────────────────────────────
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+if(window.innerWidth>768){
+  document.addEventListener('mousemove',e=>{
+    cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';
+    setTimeout(()=>{ring.style.left=e.clientX+'px';ring.style.top=e.clientY+'px'},80);
+  });
+  document.querySelectorAll('button,a,[onclick]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='18px';cur.style.height='18px';ring.style.width='52px';ring.style.height='52px'});
+    el.addEventListener('mouseleave',()=>{cur.style.width='12px';cur.style.height='12px';ring.style.width='36px';ring.style.height='36px'});
+  });
+}
+
+// ── NAVBAR SCROLL ─────────────────────────────────────────────────────────────
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>20));
+
+// ── MOBILE MENU ───────────────────────────────────────────────────────────────
+function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open')}
+
+// ── HERO CANVAS PARTICLES ─────────────────────────────────────────────────────
+(function(){
+  const canvas=document.getElementById('heroCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,pts=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;pts=Array.from({length:50},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.5,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*.5+.2}))}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>W)p.vx*=-1;
+      if(p.y<0||p.y>H)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,133,63,${p.a})`;ctx.fill();
+    });
+    // Lines between close pts
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`rgba(0,133,63,${.15*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke()}
+    }));
+    requestAnimationFrame(draw);
+  }
+  window.addEventListener('resize',resize);resize();draw();
+})();
+
+// ── COUNT-UP ANIMATION ────────────────────────────────────────────────────────
+function startCountUp(){
+  document.querySelectorAll('[data-target]').forEach(el=>{
+    const target=+el.dataset.target,suffix=target===98?'%':target===1200?'+':'';
+    let current=0,step=target/60;
+    const t=setInterval(()=>{
+      current=Math.min(current+step,target);
+      el.textContent=Math.floor(current).toLocaleString('fr')+(current>=target?suffix:'');
+      if(current>=target)clearInterval(t);
+    },20);
+  });
+}
+let countStarted=false;
+const heroObs=new IntersectionObserver(entries=>{if(entries[0].isIntersecting&&!countStarted){countStarted=true;startCountUp()}},{threshold:.5});
+const heroEl=document.querySelector('.hero-stats');
+if(heroEl)heroObs.observe(heroEl);
+
+// ── SCROLL FADE-IN ────────────────────────────────────────────────────────────
+const fadeObs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.1,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fade-in').forEach(el=>fadeObs.observe(el));
+
+// ── BAR ANIMATION ─────────────────────────────────────────────────────────────
+function animateBars(){
+  setTimeout(()=>{document.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=(b.dataset.val||'0')+'%'})},100);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function hideAll(){
+  ['home-sections','tenders','detail','dash'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.display='none';el.classList.remove('active')}
+  });
+}
+function show(id){
+  hideAll();
+  const el=document.getElementById(id);
+  if(el){el.style.display='';el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+}
+function goHome(){
+  hideAll();
+  const h=document.getElementById('home-sections');
+  if(h){h.style.display='block';window.scrollTo({top:0,behavior:'smooth'})}
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  document.getElementById('nlHome')?.classList.add('active');
+}
+function showTenders(){
+  show('tenders');
+  renderTenders();
+  document.getElementById('nlTenders')?.classList.add('active');
+}
+function showDash(){
+  show('dash');
+  renderDash();
+  document.getElementById('nlDash')?.classList.add('active');
+}
+function showDetail(t){
+  currentTender=t;
+  show('detail');
+  renderDetail();
+}
+
+// ── LOGIN ─────────────────────────────────────────────────────────────────────
+function openLogin(r){
+  loginRole=r;
+  switchLoginTab(r);
+  document.getElementById('loginOverlay').classList.add('open');
+}
+function switchLoginTab(r){
+  loginRole=r;
+  document.getElementById('tabInst').classList.toggle('active',r==='institution');
+  document.getElementById('tabEnt').classList.toggle('active',r==='entreprise');
+  document.getElementById('loginEmail').value=r==='institution'?'min.education@gouv.sn':'contact@senegait.sn';
+}
+function closeLoginOutside(e){if(e.target===document.getElementById('loginOverlay'))document.getElementById('loginOverlay').classList.remove('open')}
+function doLogin(){
+  role=loginRole;
+  document.getElementById('loginOverlay').classList.remove('open');
+  // Update UI
+  document.getElementById('navActions').style.display='none';
+  document.getElementById('navLogged').style.display='flex';
+  document.getElementById('nlDash').style.display='';
+  document.getElementById('mNlDash').style.display='';
+  if(role==='institution'){
+    document.getElementById('userAv').textContent='MIN';
+    document.getElementById('userName').textContent='Min. Éducation';
+  } else {
+    document.getElementById('userAv').textContent='PME';
+    document.getElementById('userName').textContent='Sénégal IT';
+  }
+  showDash();
+}
+function logout(){
+  role=null;
+  document.getElementById('navActions').style.display='flex';
+  document.getElementById('navLogged').style.display='none';
+  document.getElementById('nlDash').style.display='none';
+  document.getElementById('mNlDash').style.display='none';
+  goHome();
+}
+
+// ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
+function toggleNotif(){document.getElementById('notifPanel').classList.toggle('open')}
+document.addEventListener('click',e=>{if(!e.target.closest('.notif-btn')&&!e.target.closest('.notif-panel'))document.getElementById('notifPanel')?.classList.remove('open')});
+
+// ── TENDERS RENDER ────────────────────────────────────────────────────────────
+function setFilter(btn,f){
+  activeFilter=f;
+  document.querySelectorAll('.filter-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTenders();
+}
+function filterTenders(){renderTenders()}
+function renderTenders(){
+  const q=document.getElementById('searchInput')?.value?.toLowerCase()||'';
+  let filtered=TENDERS.filter(t=>{
+    const matchF=activeFilter==='Tous'||t.secteur===activeFilter||t.secteur.includes(activeFilter)||activeFilter==='BTP'&&t.secteur==='BTP / Construction';
+    const matchQ=!q||t.titre.toLowerCase().includes(q)||t.ref.toLowerCase().includes(q)||t.institution.toLowerCase().includes(q);
+    return matchF&&matchQ;
+  });
+  const list=document.getElementById('tendersList');
+  const count=document.getElementById('tendersCount');
+  if(!list)return;
+  count.textContent=`${filtered.length} résultat(s) trouvé(s)`;
+  list.innerHTML=filtered.map(t=>`
+    <div class="tender-card" onclick="showDetail(TENDERS[${t.id-1}])">
+      <div class="tender-card-left">
+        <div class="tender-card-tags">
+          <span class="tag tag-ref">${t.ref}</span>
+          <span class="tag tag-sector">💻 ${t.secteur}</span>
+          ${t.urgent?'<span class="tag tag-urgent">⚡ Urgent</span>':''}
+        </div>
+        <div class="tender-title">${t.titre}</div>
+        <div class="tender-inst">📍 ${t.institution}</div>
+        <div class="tender-meta">
+          <div class="tender-meta-item"><small>Budget estimé</small><strong>${t.budget} FCFA</strong></div>
+          <div class="tender-meta-item"><small>Date limite</small><strong style="color:${t.urgent?'var(--rouge)':'var(--texte)'}">${t.delai}</strong></div>
+          <div class="tender-meta-item"><small>Soumissions</small><strong>${t.soumissions} offres</strong></div>
+        </div>
+      </div>
+      <div class="tender-card-right">
+        <span class="badge ${t.statut==='Ouvert'?'badge-open':t.statut==='Clôturé'?'badge-closed':'badge-eval'}">${t.statut}</span>
+        ${role==='entreprise'&&t.statut==='Ouvert'?`<button class="btn-sm btn-sm-green" onclick="event.stopPropagation();openSubmit(TENDERS[${t.id-1}])">Soumettre</button>`:''}
+        <span style="font-size:20px;color:var(--gris-m)">→</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── DETAIL RENDER ─────────────────────────────────────────────────────────────
+function renderDetail(){
+  const t=currentTender;
+  if(!t)return;
+  document.getElementById('detailBack').onclick=()=>showTenders();
+  const showEval=role==='institution'||t.statut==='Clôturé';
+  const evalHtml=showEval?`
+    <div class="card" style="margin-top:18px">
+      <div class="card-head">
+        <h3>🏆 Classement des Soumissions — Évaluation IA</h3>
+      </div>
+      <div class="eval-wrap">
+        <table class="eval-table">
+          <thead><tr><th>Rang</th><th>Entreprise</th><th>Score</th><th>Prix</th><th>Qualité</th><th>Délai</th><th>Réf.</th><th>Statut</th></tr></thead>
+          <tbody>
+            ${SUBMISSIONS.map(s=>`
+            <tr class="${s.rang===1?'winner':''}">
+              <td><span class="rank-badge ${s.rang===1?'rank-1':'rank-other'}">${s.rang}</span></td>
+              <td style="font-weight:700;font-size:13px">${s.ent}</td>
+              <td><span class="score-big" style="color:${s.score>=85?'var(--vert)':s.score>=75?'var(--or)':'var(--gris)'}">${s.score}</span><span style="font-size:11px;color:var(--gris)">/100</span></td>
+              <td><div class="bar-wrap"><div class="bar"><div class="bar-fill" data-val="${s.qualite}" style="background:var(--vert);width:0"></div></div><span class="bar-val">${s.qualite}</span></div></td>
+              <td><div class="bar-wrap"><div class="bar"><div class="bar-fill" data-val="${s.qualite}" style="background:#3B82F6;width:0"></div></div><span class="bar-val">${s.qualite}</span></div></td>
+              <td><div class="bar-wrap"><div class="bar"><div class="bar-fill" data-val="${s.delai}" style="background:var(--or);width:0"></div></div><span class="bar-val">${s.delai}</span></div></td>
+              <td><div class="bar-wrap"><div class="bar"><div class="bar-fill" data-val="${s.ref}" style="background:var(--rouge);width:0"></div></div><span class="bar-val">${s.ref}</span></div></td>
+              <td><span class="badge ${s.statut==='Finaliste'?'badge-open':'badge-eval'}">${s.statut}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${role==='institution'?`<div class="eval-footer"><span class="eval-rec">🤖 Recommandation IA : <strong>Sénégal IT Solutions (87/100)</strong></span><button class="btn-validate">✅ Valider l'Attribution</button></div>`:''}
+    </div>`:
+    (role==='entreprise'&&t.statut==='Ouvert'?`<button class="btn-modal-ok" style="width:100%;margin-top:18px;font-size:15px;padding:15px" onclick="openSubmit(currentTender)">📤 Soumettre mon Offre</button>` : '');
+
+  document.getElementById('detailWrap').innerHTML=`
+    <div style="grid-column:1">
+      <!-- Header -->
+      <div class="card" style="margin-bottom:16px">
+        <div style="height:180px;overflow:hidden;border-radius:18px 18px 0 0;position:relative">
+          <img src="${t.img}" style="width:100%;height:100%;object-fit:cover" alt="${t.titre}"/>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(18,36,58,.7),transparent)"></div>
+          <div style="position:absolute;bottom:16px;left:22px;display:flex;gap:8px;flex-wrap:wrap">
+            <span class="tag tag-ref">${t.ref}</span>
+            <span class="tag tag-sector">💻 ${t.secteur}</span>
+            ${t.urgent?'<span class="tag tag-urgent">⚡ Urgent</span>':''}
+          </div>
+        </div>
+        <div style="padding:22px 26px">
+          <h1 style="font-family:var(--font-display);font-size:22px;color:var(--encre);margin-bottom:6px;line-height:1.25">${t.titre}</h1>
+          <p style="font-size:14px;color:var(--gris);margin-bottom:18px">📍 ${t.institution}</p>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding-top:16px;border-top:1px solid var(--gris-l)">
+            <div><div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Budget estimé</div><div style="font-family:var(--font-display);font-size:20px;color:var(--vert)">${t.budget} FCFA</div></div>
+            <div><div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Date de clôture</div><div style="font-size:16px;font-weight:800;color:${t.urgent?'var(--rouge)':'var(--texte)'}">${t.delai}</div></div>
+            <div><div style="font-size:10px;color:var(--gris);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Soumissions reçues</div><div style="font-size:16px;font-weight:800;color:var(--texte)">${t.soumissions} offres</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Description -->
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-head"><h3>📄 Description du Marché</h3></div>
+        <div class="card-p">
+          <p style="font-size:14px;color:var(--gris);line-height:1.75;margin-bottom:16px">Ce marché porte sur la fourniture et l'installation d'équipements dans le cadre du programme de numérisation et de modernisation des services publics sénégalais. Les prestations devront être réalisées dans les délais impartis, conformément au cahier des charges technique joint.</p>
+          <div class="criteria-box" style="margin-bottom:0">
+            <div style="font-size:11px;font-weight:800;color:var(--vert);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px">⚖️ Critères de Sélection</div>
+            ${[["💰 Prix proposé","35%"],["⭐ Qualité technique","30%"],["⏱️ Délai d'exécution","20%"],["📁 Références","15%"]].map(([l,v])=>`<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span style="color:var(--texte)">${l}</span><strong style="color:var(--vert)">${v}</strong></div>`).join('')}
+          </div>
+        </div>
+      </div>
+      ${evalHtml}
+    </div>
+    <!-- Sidebar -->
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-head"><h3>📎 Documents Requis</h3></div>
+        <div class="card-p" style="padding:14px 20px">
+          ${["Extrait RCCM","Quitus fiscal DGID","Attestation CNSS","Offre technique détaillée","Offre financière (pli fermé)","Références projets similaires"].map(d=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--gris-l)"><span style="color:var(--vert)">✅</span><span style="font-size:13px">${d}</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>📍 Localisation</h3></div>
+        <div class="card-p" style="padding:14px 20px">
+          <div class="map-mock">
+            <svg viewBox="0 0 300 200" style="width:100%;height:100%;position:absolute;inset:0">
+              <rect width="300" height="200" fill="#D6EAD9"/>
+              <path d="M80 30 L120 20 L160 28 L200 18 L240 35 L260 70 L255 110 L240 145 L210 170 L170 185 L130 180 L90 160 L60 125 L50 85 L55 55Z" fill="#00853F" opacity="0.25" stroke="#005C2B" stroke-width="1.5"/>
+              <circle cx="148" cy="98" r="10" fill="white" opacity=".9"/>
+              <circle cx="148" cy="98" r="6" fill="var(--rouge)"/>
+              <text x="160" y="93" font-size="10" fill="var(--encre)" font-weight="bold" font-family="Plus Jakarta Sans, sans-serif">Dakar</text>
+              <circle cx="100" cy="130" r="4" fill="var(--or)"/>
+              <circle cx="200" cy="140" r="4" fill="var(--or)"/>
+              <circle cx="220" cy="90" r="4" fill="var(--or)"/>
+              <text x="48" y="25" font-size="8" fill="rgba(0,0,0,.4)" font-family="Plus Jakarta Sans, sans-serif">Sénégal</text>
+            </svg>
+            <div class="map-pin" style="z-index:2"><div class="map-pin-inner"></div><div class="map-pin-wave"></div></div>
+          </div>
+          <p style="font-size:13px;color:var(--gris);display:flex;align-items:center;gap:6px">📌 Sénégal — National (toutes régions)</p>
+          <p style="font-size:12px;color:var(--gris);margin-top:6px">Livraison dans 150 établissements répartis dans les 14 régions</p>
+        </div>
+      </div>
+    </div>
+  `;
+  // Re-animate bars after render
+  setTimeout(animateBars,200);
+}
+
+// ── DASHBOARD RENDER ──────────────────────────────────────────────────────────
+function renderDash(){
+  const isInst=role==='institution';
+  document.getElementById('dashTitle').textContent=isInst?'Ministère de l\'Éducation Nationale':'Sénégal IT Solutions';
+  document.getElementById('dashSub').textContent=isInst?'Dakar, Sénégal — Accès Institutionnel Vérifié ✅':'PME Numérique — Dakar — Profil Certifié ✅';
+  const btn=document.getElementById('dashActionBtn');
+  btn.textContent=isInst?'+ Publier un Appel d\'Offres':'🔍 Trouver des Marchés';
+  btn.onclick=isInst?()=>openPublish():showTenders;
+
+  const kpis=isInst?[
+    {l:"Marchés Publiés",v:"12",s:"+2 ce mois",c:"var(--vert)"},
+    {l:"Soumissions Reçues",v:"47",s:"5 en attente",c:"var(--or)"},
+    {l:"Marchés Attribués",v:"8",s:"97% dans les délais",c:"#3B82F6"},
+    {l:"Budget Engagé",v:"3,2 Mds FCFA",s:"sur 5 Mds prévus",c:"var(--rouge)"},
+  ]:[
+    {l:"Offres Soumises",v:"18",s:"3 en évaluation",c:"var(--vert)"},
+    {l:"Marchés Remportés",v:"6",s:"Taux de succès : 33%",c:"var(--or)"},
+    {l:"Valeur des Contrats",v:"1,8 Mds FCFA",s:"en 2025",c:"#3B82F6"},
+    {l:"Score Moyen",v:"82/100",s:"Classé Top 5%",c:"var(--rouge)"},
+  ];
+
+  const activ=isInst?[
+    {icon:"📥",bg:"var(--vert-l)",msg:"Nouvelle soumission — Sénégal IT Solutions",time:"Il y a 5 min"},
+    {icon:"🔒",bg:"var(--gris-l)",msg:"Appel ONAS-2025-012 clôturé",time:"Il y a 2h"},
+    {icon:"✅",bg:"var(--or-l)",msg:"Budget approuvé pour MIN-AGRI-033",time:"Hier, 14h30"},
+    {icon:"💬",bg:"#EFF6FF",msg:"Message de DAKAR TECH SARL",time:"Hier, 9h15"},
+  ]:[
+    {icon:"🏆",bg:"var(--or-l)",msg:"Vous êtes Finaliste — DCMP-2025-001",time:"Il y a 2h"},
+    {icon:"📧",bg:"#EFF6FF",msg:"Nouvel appel correspondant à votre profil",time:"Hier, 10h00"},
+    {icon:"⏰",bg:"var(--rouge-l)",msg:"Rappel : APIX-TIC-008 — 10 jours restants",time:"Hier, 8h00"},
+    {icon:"✅",bg:"var(--vert-l)",msg:"Certification CNSS renouvelée",time:"Il y a 3 jours"},
+  ];
+
+  const subTable=isInst?`
+    <div class="card" style="grid-column:1">
+      <div class="card-head"><h3>📋 Mes Appels d'Offres</h3><a onclick="showTenders()">Voir tout →</a></div>
+      ${TENDERS.slice(0,4).map(t=>`
+      <div class="card-row" onclick="showDetail(TENDERS[${t.id-1}])">
+        <div class="card-row-main">
+          <div class="card-row-title">${t.titre}</div>
+          <div class="card-row-sub">${t.ref} • ${t.soumissions} soumissions</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <span class="badge ${t.statut==='Ouvert'?'badge-open':t.statut==='Clôturé'?'badge-closed':'badge-eval'}">${t.statut}</span>
+          <span style="font-size:11px;color:var(--gris)">${t.delai}</span>
+        </div>
+      </div>`).join('')}
+    </div>
+  `:`
+    <div class="card" style="grid-column:1">
+      <div class="card-head"><h3>⭐ Opportunités Recommandées par IA</h3><span style="font-size:11px;font-weight:700;color:var(--vert);background:var(--vert-l);padding:3px 8px;border-radius:6px">IA</span></div>
+      ${TENDERS.filter(t=>t.statut==='Ouvert').slice(0,3).map(t=>`
+      <div class="card-row" onclick="showDetail(TENDERS[${t.id-1}])">
+        <div class="card-row-main">
+          <div class="card-row-title">${t.titre} ${t.urgent?'<span class="tag tag-urgent" style="font-size:10px">⚡</span>':''}</div>
+          <div class="card-row-sub">${t.ref} — ${t.budget} FCFA — Clôture : ${t.delai}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <span class="badge badge-open">${t.statut}</span>
+          <button class="btn-sm btn-sm-green" onclick="event.stopPropagation();openSubmit(TENDERS[${t.id-1}])">Soumettre</button>
+        </div>
+      </div>`).join('')}
+      <div class="card-head" style="border-top:1px solid var(--gris-l);border-bottom:none"><h3>🎯 Mes Soumissions en Cours</h3></div>
+      ${[{ref:"DCMP-2025-001",titre:"Fournitures informatiques écoles",score:87,rang:"1er / 4",st:"Finaliste"},{ref:"APIX-TIC-008",titre:"Système de gestion documentaire",score:74,rang:"3ème / 3",st:"En évaluation"}].map(s=>`
+      <div class="card-row">
+        <div class="card-row-main">
+          <div class="card-row-title">${s.titre}</div>
+          <div class="card-row-sub">${s.ref} • Rang : ${s.rang}</div>
+          <div style="margin-top:8px"><div class="bar-wrap"><div class="bar"><div class="bar-fill" data-val="${s.score}" style="background:${s.score>=80?'var(--vert)':'var(--or)'};width:0"></div></div><span style="font-size:12px;font-weight:700;color:${s.score>=80?'var(--vert)':'var(--or)'}">${s.score}/100</span></div></div>
+        </div>
+        <span class="badge ${s.st==='Finaliste'?'badge-open':'badge-eval'}">${s.st}</span>
+      </div>`).join('')}
+    </div>
+  `;
+
+  const sideExtra=isInst?`
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head"><h3>📊 Répartition Sectorielle</h3></div>
+      <div class="card-p">
+        ${[["💻 Numérique",35,"var(--vert)"],["🏗️ BTP",28,"var(--or)"],["🌾 Agriculture",20,"#3B82F6"],["🛎️ Services",17,"var(--rouge)"]].map(([l,v,c])=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;font-size:12px;color:var(--gris);margin-bottom:4px"><span>${l}</span><strong style="color:var(--texte)">${v}%</strong></div><div style="height:6px;background:var(--gris-l);border-radius:3px;overflow:hidden"><div style="width:${v}%;height:100%;background:${c};border-radius:3px;transition:width 1s ease"></div></div></div>`).join('')}
+      </div>
+    </div>
+  `:`
+    <div class="card" style="margin-bottom:14px">
+      <div class="card-head"><h3>🏢 Profil Entreprise</h3></div>
+      <div class="card-p">
+        ${[["Secteur","Numérique / IT"],["Statut","SARL"],["Ville","Dakar, Plateau"],["Capital","50 000 000 FCFA"],["Effectif","28 employés"]].map(([l,v])=>`<div class="profile-row"><span style="color:var(--gris)">${l}</span><strong>${v}</strong></div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>✅ Certifications</h3></div>
+      <div class="card-p">
+        ${[["RCCM",true],["Conformité Fiscale DGID",true],["Quitus CNSS",true],["ISO 9001",false]].map(([l,ok])=>`<div class="cert-item"><span class="${ok?'cert-ok':'cert-no'}">${ok?'✅':'○'}</span><span style="font-size:13px;color:${ok?'var(--texte)':'var(--gris)'}">${l}</span></div>`).join('')}
+      </div>
+    </div>
+  `;
+
+  document.getElementById('dashBody').innerHTML=`
+    <div class="dash-grid">
+      ${kpis.map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-val" style="color:${k.c}">${k.v}</div><div class="kpi-sub">${k.s}</div></div>`).join('')}
+    </div>
+    <div class="dash-2col">
+      <div>
+        ${subTable}
+      </div>
+      <div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="card-head"><h3>🔔 Activité Récente</h3></div>
+          <div class="card-p">
+            ${activ.map(a=>`<div class="activity-item"><div class="act-icon" style="background:${a.bg}">${a.icon}</div><div><div class="act-msg">${a.msg}</div><div class="act-time">${a.time}</div></div></div>`).join('')}
+          </div>
+        </div>
+        ${sideExtra}
+      </div>
+    </div>
+  `;
+  setTimeout(animateBars,300);
+}
+
+// ── PUBLISH MODAL ─────────────────────────────────────────────────────────────
+function openPublish(){document.getElementById('publishOverlay').classList.add('open');document.getElementById('publishContent').style.display='';document.getElementById('publishSuccess').style.display='none'}
+function closePublish(){document.getElementById('publishOverlay').classList.remove('open')}
+function closePublishOutside(e){if(e.target===document.getElementById('publishOverlay'))closePublish()}
+function doPublish(){document.getElementById('publishContent').style.display='none';document.getElementById('publishSuccess').style.display=''}
+
+// ── SUBMIT MODAL ──────────────────────────────────────────────────────────────
+function openSubmit(t){
+  currentTender=t;
+  document.getElementById('successRef').textContent=t.ref;
+  document.getElementById('submitSubTitle').textContent=t.titre;
+  document.getElementById('submitContent').style.display='';
+  document.getElementById('submitSuccess').style.display='none';
+  document.getElementById('submitOverlay').classList.add('open');
+}
+function closeSubmit(){document.getElementById('submitOverlay').classList.remove('open')}
+function closeSubmitOutside(e){if(e.target===document.getElementById('submitOverlay'))closeSubmit()}
+function doSubmit(){document.getElementById('submitContent').style.display='none';document.getElementById('submitSuccess').style.display=''}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+goHome();
+</script>
+</body>
+</html>
